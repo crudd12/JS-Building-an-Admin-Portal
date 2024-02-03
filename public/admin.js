@@ -5,37 +5,75 @@ async function getBooks() {
     let booksResponse = await booksList.json();
     console.log(booksResponse)
 
-    booksResponse.forEach(bookTitles);
+    booksResponse.forEach(renderBook);
 };
 
 getBooks();
 
-function bookTitles(title) {
-    let titleList = document.querySelector('#root');
-    titleList.innerHTML += `
-    <li>${title.title}</li>
-    <input type='text' class='totalBooks' value=${title.quantity} />
-    <button type='type' id='numberOfBooks' class='btn btn-primary'>Save</button> 
-    `
-    let bookQuantity = document.getElementsByClassName('totalBooks').value;
-    let submitQuantity = document.getElementsByClassName('btn');
+function renderBook(book) {
+    let rootElem = document.querySelector('#root')
 
-    submitQuantity.addEventListener('click', () => {
+    let listItem = document.createElement('li')
+    listItem.textContent = book.title
+
+    let qtyInput = document.createElement('input')
+    qtyInput.value = book.quantity
+
+    let saveBtn = document.createElement('button')
+    saveBtn.textContent = 'Save'
+
+    saveBtn.addEventListener('click', () => {
         fetch('http://localhost:3001/updateBook', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: title.id,
-                quantity: bookQuantity,
+                id: book.id,
+                quantity: qtyInput.value
             })
         })
-    });
-    let result = response.json();
-    console.log(result)
+    })
 
+    listItem.append(qtyInput, saveBtn)
+
+    rootElem.append(listItem)
 }
+
+
+
+
+
+
+
+
+
+// function bookTitles(title) {
+//     let titleList = document.querySelector('#root');
+//     titleList.innerHTML += `
+//     <li>${title.title}</li>
+//     <input type='text' class='totalBooks' value=${title.quantity} />
+//     <button type='type' id='numberOfBooks' class='btn btn-primary'>Save</button>
+//     `
+//     let bookQuantity = document.getElementsByClassName('totalBooks').value;
+//     let submitQuantity = document.getElementsByClassName('btn');
+
+//     submitQuantity.addEventListener('click', () => {
+//         fetch('http://localhost:3001/updateBook', {
+//             method: 'PATCH',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 id: title.id,
+//                 quantity: bookQuantity,
+//             })
+//         })
+//     });
+//     let result = response.json();
+//     console.log(result)
+
+// }
 
 
 // let bookQuantity = document.getElementsByClassName('totalBooks').value;
